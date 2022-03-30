@@ -1,0 +1,30 @@
+#
+# 使用平均K线计算WR指标
+#
+
+declare lower;
+
+input length = 13;
+input overBought = -20;
+input overSold = -80;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+def hh = Highest(haHigh, length);
+def ll = Lowest(haLow, length);
+def result = if hh == ll then -100 else (hh - haClose) / (hh - ll) * (-100);
+
+plot WR = if result > 0 then 0 else result;
+WR.SetDefaultColor(Color.BLACK);
+
+plot Over_Sold = overSold;
+Over_Sold.SetDefaultColor(GetColor(5));
+
+plot Over_Bought = overBought;
+Over_Bought.SetDefaultColor(GetColor(5));
+
+AddCloud(WR, Over_Bought, Color.PINK, Color.GRAY);
+AddCloud(Over_Sold, WR, Color.GREEN, Color.GRAY);
