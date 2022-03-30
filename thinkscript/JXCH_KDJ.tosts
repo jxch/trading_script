@@ -1,0 +1,30 @@
+#
+# KDJ指标
+#
+
+declare lower;
+
+input overBot       = 80;
+input overSld       = 20;
+input kPeriod       = 9;
+input dPeriod       = 3;
+input slowingPeriod = 3;
+input averageType   = AverageType.SIMPLE;
+
+def rsv             = StochasticFull( overBot, overSld, kPeriod, dPeriod, high, low, close, slowingPeriod, averageType ).FastK;
+
+plot K              = MovingAverage( averageType, rsv, slowingPeriod );
+plot D              = MovingAverage( averageType, K, dPeriod );
+plot J              = ( 3 * D ) - ( 2 * K );
+
+plot OverBought     = overBot;
+plot OverSold       = overSld;
+
+K.SetDefaultColor( GetColor( 1 ) );
+D.SetDefaultColor( GetColor( 6 ) );
+J.SetDefaultColor( GetColor( 5 ) );
+
+OverBought.SetDefaultColor( Color.BLACK );
+OverSold.SetDefaultColor( Color.BLACK );
+
+AddCloud(OverBought, OverSold, Color.GRAY);
