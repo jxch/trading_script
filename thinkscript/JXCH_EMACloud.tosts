@@ -1,0 +1,13 @@
+#
+# EMA Cloud
+#
+
+input EMA1 = 13;
+input EMA2 = 55;
+input Color1 = 1;
+input Color2 = 2;
+
+plot EMA1_LINE = ExpAverage(close, EMA1);
+plot EMA2_LINE = ExpAverage(close, EMA2);
+
+AddCloud(EMA1_LINE, EMA2_LINE, getcolor(Color1), getcolor(Color2));
