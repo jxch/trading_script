@@ -1,0 +1,16 @@
+#
+# 3根线的ATR指标：真实波动、ATR、真实波动的EMA
+#
+
+declare lower;
+
+input length = 13;
+input averageType = AverageType.WILDERS;
+
+plot TRUE = TrueRange(high, close, low);
+plot TRUE_EMA = ExpAverage(TRUE, length);
+plot ATR = MovingAverage(averageType, TRUE, length);
+
+TRUE.SetDefaultColor(Color.BLACK);
+ATR_EMA.setDefaultColor(Color.ORANGE);
+ATR.setDefaultColor(Color.RED);
