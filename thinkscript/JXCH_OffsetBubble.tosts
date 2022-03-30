@@ -1,0 +1,10 @@
+#
+# 向前偏移几个交易日，然后标记气泡
+#
+
+input offset = 20;
+input bubble = "20";
+
+def isMACostBar = !IsNaN(GetValue(close, -offset)) && IsNaN(GetValue(close, -offset - 1));
+
+AddChartBubble(isMACostBar , high , bubble, Color.WHITE);
