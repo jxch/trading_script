@@ -1,0 +1,30 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © xichengjiang
+
+//@version=4
+study("MA+EMA", overlay = true)
+e1 = ema(close, 21)
+c1 = sma(close, 21)
+e2 = ema(close, 55)
+c2 = sma(close, 55)
+e3 = ema(close, 144)
+c3 = sma(close, 144)
+
+plot(e1, "ema21", color = color.gray)
+plot(c1, "ma21", color = #D3D3D3)
+plot(e2, "ema55", color = color.red)
+plot(c2, "ma55", color = #FDBCB4)
+plot(e3, "ema144", color = color.blue)
+plot(c3, "ma144", color = #ADD8E6)
+
+//DKJ
+cond = barstate.islast
+moveBar = input(0)
+x21 = input(21) + moveBar
+x55 = input(55) + moveBar
+x144 = input(144) + moveBar
+
+plot(cond?low[21]:na, color = #FFC40C, linewidth = 5, offset = -x21, style = plot.style_circles, transp = 0)
+plot(cond?low[55]:na, color = #FFC40C, linewidth = 5, offset = -x55, style = plot.style_circles, transp = 0)
+plot(cond?low[144]:na, color = #FFC40C, linewidth = 5, offset = -x144, style = plot.style_circles, transp = 0)
+
