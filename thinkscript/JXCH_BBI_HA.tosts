@@ -1,0 +1,18 @@
+#
+# 根据平均K线计算BBI多空线指标
+#
+
+input M1 = 3;
+input M2 = 6;
+input M3 = 12;
+input M4 = 24;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+plot BBI = (Average(haClose, M1) + Average(haClose, M2) + Average(haClose, M3) + Average(haClose, M4)) / 4;
+
+BBI.SetDefaultColor(GetColor(1));
+BBI.AssignValueColor(if BBI < haLow then Color.DARK_GREEN else if BBI > haHigh then Color.DaRK_RED else Color.DARK_GRAY);
