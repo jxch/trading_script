@@ -1,0 +1,14 @@
+#
+# 油金比、铜金比
+#
+
+declare lower;
+
+input length = 21;
+
+def OIL = ExpAverage(ohlc4("/CL"), length);
+def GOLD = ExpAverage(ohlc4("/GC"), length);
+def COPPER = ExpAverage(ohlc4("/HG"), length);
+
+plot O_G = (OIL / GOLD) / 10;
+plot C_G = (COPPER / GOLD) * 2;
