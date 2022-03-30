@@ -1,4 +1,6 @@
-# Double CCI
+# 
+# 使用平均K线计算CCI Double指标
+#
 
 declare lower;
 
