@@ -1,0 +1,62 @@
+#
+# 使用CCID_HA RSI_HA WR_HA指标给K线上色
+#
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+# CCID
+input CCI_short_length = 55;
+input CCI_long_length = 144;
+input CCI_over_sold = -100;
+input CCI_over_bought = 100;
+input CCI_showBreakoutSignals = no;
+
+def CCI_price = haClose + haLow + haHigh;
+def CCI_short_linDev = LinDev(CCI_price, CCI_short_length);
+def CCI_long_linDev = LinDev(CCI_price, CCI_long_length);
+def CCIS = if CCI_short_linDev == 0 then 0 else (CCI_price - Average(CCI_price, CCI_short_length)) / CCI_short_linDev / 0.015;
+def CCIL = if CCI_long_linDev == 0 then 0 else (CCI_price - Average(CCI_price, CCI_long_length)) / CCI_long_linDev / 0.015;
+
+# RSI
+input RSI_length = 13;
+input RSI_over_Bought = 70;
+input RSI_over_Sold = 30;
+input RSI_averageType = AverageType.WILDERS;
+input RSI_showBreakoutSignals = no;
+
+def RSI_price = haClose;
+
+def RSI_NetChgAvg = MovingAverage(RSI_averageType, RSI_price - RSI_price[1], RSI_length);
+def RSI_TotChgAvg = MovingAverage(RSI_averageType, AbsValue(RSI_price - RSI_price[1]), RSI_length);
+def ChgRatio = if RSI_TotChgAvg != 0 then RSI_NetChgAvg / RSI_TotChgAvg else 0;
+
+def RSI = 50 * (ChgRatio + 1);
+
+# WR
+input WR_length = 13;
+input WR_overBought = -20;
+input WR_overSold = -80;
+
+def WR_hh = Highest(haHigh, WR_length);
+def WR_ll = Lowest(haLow, WR_length);
+def WR_result = if WR_hh == WR_ll then -100 else (WR_hh - haClose) / (WR_hh - WR_ll) * (-100);
+
+def WR = if WR_result > 0 then 0 else WR_result;
+
+def CCIL_BOUGHT = if CCIL > CCI_over_bought then 1 else 0;
+def CCIS_BOUGHT = if CCIS > CCI_over_bought then 1 else 0;
+def CCIL_SOLD = if CCIL < CCI_over_sold then 1 else 0;
+def CCIS_SOLD = if CCIS < CCI_over_sold then 1 else 0;
+def RSI_BOUGHT = if RSI > RSI_over_Bought then 1 else 0;
+def RSI_SOLD = if RSI < RSI_over_Sold then 1 else 0;
+def WR_BOUGHT = if WR > WR_overBought then 1 else 0;
+def WR_SOLD = if WR < WR_overSold then 1 else 0;
+
+def CR = CCIL_BOUGHT + CCIS_BOUGHT + RSI_BOUGHT + WR_BOUGHT;
+def CG = CCIL_SOLD + CCIS_SOLD + RSI_SOLD + WR_SOLD;
+
+# Price Color
+AssignPriceColor(CreateColor(CR * (255/4), CG * (255/4), 0));
