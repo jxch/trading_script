@@ -1,0 +1,18 @@
+# 
+# 根据平均K线计算FI指标（Force index 强力指数指标）
+#
+
+declare lower;
+
+input Length = 13;
+def haClose = (open+high+low+close)/4;
+
+plot FI = ExpAverage(data = (haClose - haClose[1]) * volume, length);
+
+FI.AssignValueColor(if FI >= 0 then Color.DARK_GREEN else Color.RED);
+
+
+plot ZeroLine = 0;
+ZeroLine.SetDefaultColor(Color.GRAY);
+
+AddCloud(FI, ZeroLine, Color.GREEN, Color.PINK);
