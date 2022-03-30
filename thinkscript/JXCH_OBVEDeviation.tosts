@@ -1,0 +1,17 @@
+#
+# OBV EMA Deviation
+#
+
+declare lower;
+
+input Length = 21;
+
+def OBV = TotalSum(Sign(close - close[1]) * volume);
+
+plot OBVD = OBV - MovingAverage( AverageType.EXPONENTIAL, OBV, Length);
+plot ZeroLine = 0;
+
+ZeroLine.SetDefaultColor(GetColor(0));
+OBVD.SetDefaultColor(GetColor(3));
+
+AddCloud(OBVD, ZeroLine, Color.GREEN, Color.RED);
