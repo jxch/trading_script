@@ -1,0 +1,25 @@
+#
+# 一些因素的EMA波动率
+#
+
+declare lower;
+
+input length = 21;
+
+script V_EMA {
+    input symbol = "USMV";
+    input length = 21;
+    def today = ExpAverage(close(symbol), length);
+    def yestoday = today[1];
+    def v = (today - yestoday) / yestoday;
+    plot v_ema = 100 * ExpAverage(v, 5);
+}
+
+plot USMV = V_EMA("USMV", length);
+plot MTUM = V_EMA("MTUM", length);
+plot QUAL = V_EMA("QUAL", length);
+plot VLUE = V_EMA("VLUE", length);
+
+# style
+plot ZeroLine = 0;
+ZeroLine.setDefaultColor(Color.GRAY);
