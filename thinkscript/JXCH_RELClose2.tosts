@@ -1,0 +1,8 @@
+#
+# 两个价格的收盘价之比，symbol用+分隔
+# 比如：AAPL+QQQ
+#
+
+declare lower;
+
+plot Spreads = close(GetSymbolPart(1)) / close(GetSymbolPart(2));
