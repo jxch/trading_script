@@ -1,0 +1,31 @@
+#
+# CCI Double 双CCI指标
+#
+
+declare lower;
+
+input short_length = 55;
+input long_length = 144;
+input over_sold = -100;
+input over_bought = 100;
+input showBreakoutSignals = no;
+
+def price = close + low + high;
+def short_linDev = lindev(price, short_length);
+def long_linDev = lindev(price, long_length);
+plot CCIS = if short_linDev == 0 then 0 else (price - Average(price, short_length)) / short_linDev / 0.015;
+plot CCIL = if long_linDev == 0 then 0 else (price - Average(price, long_length)) / long_linDev / 0.015;
+CCIS.setDefaultColor(Color.BLACK);
+CCIL.setDefaultColor(Color.BLUE);
+
+plot OverBought = over_bought;
+plot ZeroLine = 0;
+plot OverSold = over_sold;
+OverBought.setDefaultColor(GetColor(5));
+ZeroLine.setDefaultColor(GetColor(5));
+OverSold.setDefaultColor(GetColor(5));
+
+AddCloud(CCIS, OverBought, Color.PINK, COlor.GRAY);
+AddCloud(CCIL, OverBought, Color.PINK, COlor.GRAY);
+AddCloud(OverSold, CCIS, Color.Green, COlor.GRAY);
+AddCloud(OverSold, CCIL, Color.Green, COlor.GRAY);
