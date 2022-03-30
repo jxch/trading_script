@@ -1,0 +1,15 @@
+#
+# Sea Turtle.
+#
+
+input UP_Length = 20;
+input DOWN_length = 10;
+
+plot UP = GetValue(high, GetMaxValueOffset(high, UP_Length), UP_Length);
+plot DOWN = GetValue(low, GetMinValueOffset(low, DOWN_length), DOWN_length);
+
+AddCloud(UP, high, Color.Pink, Color.Green);
+AddCloud(low, DOWN, Color.CYAN, Color.RED);
+
+UP.setDefaultColor(Color.Red);
+DOWN.setDefaultColor(Color.Green);
