@@ -1,0 +1,19 @@
+#
+# ATR Channel. 
+#
+
+input Length = 21;
+input Length_ATR = 13;
+
+def A = ATR(Length_ATR);
+def Center = ExpAverage(Close, Length);
+
+plot C = Center;
+plot U = Center + 2 * A;
+plot D = Center - 2 * A;
+
+AddCloud(U, C, Color.CYAN, Color.Red);
+AddCloud(C, D, Color.PINK, Color.Red);
+C.SetDefaultColor(Color.LIGHT_RED);
+U.SetDefaultColor(Color.LIGHT_ORANGE);
+D.SetDefaultColor(Color.LIGHT_ORANGE);
