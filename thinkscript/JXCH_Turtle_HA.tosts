@@ -1,0 +1,20 @@
+#
+# 使用平均K线的海龟交易法.
+#
+
+input UP_Length = 20;
+input DOWN_length = 10;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+plot UP = GetValue(haHigh, GetMaxValueOffset(haHigh, UP_Length), UP_Length);
+plot DOWN = GetValue(haLow, GetMinValueOffset(haLow, DOWN_length), DOWN_length);
+
+AddCloud(UP, haHigh, Color.Pink, Color.Green);
+AddCloud(haLow, DOWN, Color.CYAN, Color.RED);
+
+UP.setDefaultColor(Color.Red);
+DOWN.setDefaultColor(Color.Green);
