@@ -1,0 +1,36 @@
+#
+# QQQ TOP 股票的EMA波动率
+#
+
+declare lower;
+
+input length = 21;
+
+script ATR_EMA {
+    input symbol = "QQQ";
+    input length = 21;
+    def the_close = close(symbol);
+    def today = ExpAverage(the_close, length);
+    def yestoday = today[1];
+    def atr = (today - yestoday) / yestoday;
+    plot atr_ema = 100 * ExpAverage(atr, 5);
+}
+
+plot QQQ = ATR_EMA("QQQ", length);
+plot AAPL = ATR_EMA("AAPL", length);
+plot GOOG = ATR_EMA("GOOG", length);
+plot FB = ATR_EMA("FB", length);
+plot MSFT = ATR_EMA("MSFT", length);
+plot TSLA = ATR_EMA("TSLA", length);
+plot NVDA = ATR_EMA("NVDA", length);
+plot AMZN = ATR_EMA("AMZN", length);
+plot AMD = ATR_EMA("AMD", length);
+plot TSM = ATR_EMA("TSM", length);
+plot IBM = ATR_EMA("IBM", length);
+
+# style
+plot ZeroLine = 0;
+ZeroLine.setDefaultColor(Color.GRAY);
+AddCloud(QQQ, ZeroLine, Color.GREEN, Color.PINK);
+
+
