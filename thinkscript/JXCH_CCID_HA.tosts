@@ -1,0 +1,34 @@
+# Double CCI
+
+declare lower;
+
+input short_length = 55;
+input long_length = 144;
+input over_sold = -100;
+input over_bought = 100;
+input showBreakoutSignals = no;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+def price = haClose + haLow + haHigh;
+def short_linDev = lindev(price, short_length);
+def long_linDev = lindev(price, long_length);
+plot CCIS = if short_linDev == 0 then 0 else (price - Average(price, short_length)) / short_linDev / 0.015;
+plot CCIL = if long_linDev == 0 then 0 else (price - Average(price, long_length)) / long_linDev / 0.015;
+CCIS.setDefaultColor(Color.BLACK);
+CCIL.setDefaultColor(Color.BLUE);
+
+plot OverBought = over_bought;
+plot ZeroLine = 0;
+plot OverSold = over_sold;
+OverBought.setDefaultColor(GetColor(5));
+ZeroLine.setDefaultColor(GetColor(5));
+OverSold.setDefaultColor(GetColor(5));
+
+AddCloud(CCIS, OverBought, Color.PINK, COlor.GRAY);
+AddCloud(CCIL, OverBought, Color.PINK, COlor.GRAY);
+AddCloud(OverSold, CCIS, Color.Green, COlor.GRAY);
+AddCloud(OverSold, CCIL, Color.Green, COlor.GRAY);
