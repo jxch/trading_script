@@ -1,0 +1,21 @@
+#
+# 使用平均K线计算的ATR3指标
+#
+
+declare lower;
+
+input length = 13;
+input averageType = AverageType.WILDERS;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+plot ATRTRUE = TrueRange(haHigh, haClose, haLow);
+plot ATRMA = MovingAverage(averageType, ATRTRUE, length);
+plot ATR_EMA = ExpAverage(ATRTRUE, length);
+
+ATRTRUE.SetDefaultColor(Color.BLACK);
+ATRMA.setDefaultColor(Color.RED);
+ATR_EMA.setDefaultColor(Color.ORANGE);
