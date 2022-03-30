@@ -1,0 +1,25 @@
+#
+# Williams Overbought/Oversold Index(W&R%R) 威廉指标
+#
+
+declare lower;
+
+input length = 13;
+input overBought = -20;
+input overSold = -80;
+
+def hh = Highest(high, length);
+def ll = Lowest(low, length);
+def result = if hh == ll then -100 else (hh - close) / (hh - ll) * (-100);
+
+plot WR = if result > 0 then 0 else result;
+WR.SetDefaultColor(Color.BLACK);
+
+plot Over_Sold = overSold;
+Over_Sold.SetDefaultColor(GetColor(5));
+
+plot Over_Bought = overBought;
+Over_Bought.SetDefaultColor(GetColor(5));
+
+AddCloud(WR, Over_Bought, Color.PINK, Color.GRAY);
+AddCloud(Over_Sold, WR, Color.GREEN, Color.GRAY);
