@@ -1,0 +1,40 @@
+#
+# 美股主要行业EMA波动率
+#
+
+declare lower;
+
+input length = 21;
+
+script ATR_EMA {
+    input symbol = "SPY";
+    input length = 21;
+    def haClose = (open(symbol)+high(symbol)+low(symbol)+close(symbol))/4;
+    def today = ExpAverage(haClose, length);
+    def yestoday = today[1];
+    def atr = (today - yestoday) / yestoday;
+    plot atr_ema = 100 * ExpAverage(atr, 5);
+}
+
+plot SPY = ATR_EMA("SPY", length);
+plot XLK = ATR_EMA("XLK", length);
+plot XLF = ATR_EMA("XLF", length);
+plot XLE = ATR_EMA("XLE", length);
+plot XLC = ATR_EMA("XLC", length);
+plot XLI = ATR_EMA("XLI", length);
+plot XLV = ATR_EMA("XLV", length);
+plot XLB = ATR_EMA("XLB", length);
+plot XLP = ATR_EMA("XLP", length);
+plot XLY = ATR_EMA("XLY", length);
+plot XLU = ATR_EMA("XLU", length);
+plot XLRE = ATR_EMA("XLRE", length);
+plot XHB = ATR_EMA("XHB", length);
+plot XRT = ATR_EMA("XRT", length);
+plot KBE = ATR_EMA("KBE", length);
+
+# style
+plot ZeroLine = 0;
+ZeroLine.setDefaultColor(Color.GRAY);
+AddCloud(SPY, ZeroLine, Color.GREEN, Color.PINK);
+
+
