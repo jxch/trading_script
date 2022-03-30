@@ -1,0 +1,14 @@
+#
+# 3个 offset bubble
+#
+
+input offet1 = 21;
+input bubble1 = "21";
+input offet2 = 55;
+input bubble2 = "55";
+input offet3 = 144;
+input bubble3 = "144";
+
+AddChartBubble(!IsNaN(GetValue(close, -offet1)) && IsNaN(GetValue(close, -offet1 - 1)) , high , bubble1, Color.GRAY);
+AddChartBubble(!IsNaN(GetValue(close, -offet2)) && IsNaN(GetValue(close, -offet2 - 1)) , high , bubble2, Color.PINK);
+AddChartBubble(!IsNaN(GetValue(close, -offet3)) && IsNaN(GetValue(close, -offet3 - 1)) , high , bubble3, Color.WHITE);
