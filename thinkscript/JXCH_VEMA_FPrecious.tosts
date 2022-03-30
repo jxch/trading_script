@@ -1,0 +1,26 @@
+#
+# 贵金属期货EMA波动率
+#
+
+declare lower;
+
+input length = 21;
+
+script V_EMA {
+    input symbol = "/GC";
+    input length = 21;
+    def today = ExpAverage(close(symbol), length);
+    def yestoday = today[1];
+    def v = (today - yestoday) / yestoday;
+    plot v_ema = 100 * ExpAverage(v, 5);
+}
+
+plot GC = V_EMA("/GC", length);
+plot PA = V_EMA("/PA", length);
+plot PL = V_EMA("/PL", length);
+plot SI = V_EMA("/SI", length);
+
+# style
+plot ZeroLine = 0;
+ZeroLine.setDefaultColor(Color.GRAY);
+AddCloud(GC, ZeroLine, Color.GREEN, Color.PINK);
