@@ -1,0 +1,44 @@
+#
+# 只显示两条线的MACDD
+#
+
+declare lower;
+
+input fastLength = 12;
+input slowLength = 26;
+input MACDLength = 9;
+input averageType = AverageType.EXPONENTIAL;
+input showBreakoutSignals = no;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+plot ZeroLine = 0;
+ZeroLine.SetDefaultColor(Color.GRAY);
+
+# MACD
+plot Value = MovingAverage(averageType, haClose, fastLength) - MovingAverage(averageType, haClose, slowLength);
+def Avg = MovingAverage(averageType, Value, MACDLength);
+def Diff = Value - Avg;
+
+# FMACD
+def fastMA1 = MovingAverage(averageType, haClose, fastLength);
+def fastMA2 = MovingAverage(averageType, fastMA1, fastLength);
+def fastMA = fastMA1 * 2 - fastMA2;
+
+def slowMA1 = MovingAverage(averageType, haClose, slowLength);
+def slowMA2 = MovingAverage(averageType, slowMA1, slowLength);
+def slowMA = slowMA1 * 2 - slowMA2;
+
+plot FValue = fastMA - slowMA;
+
+def avg1 = MovingAverage(averageType, FValue, MACDLength);
+def avg2 = MovingAverage(averageType, avg1, MACDLength);
+
+def FAvg = avg1 * 2 - avg2;
+def FDiff = FValue - FAvg;
+
+Value.AssignValueColor(if Diff > 0 then Color.BLACK else Color.LIGHT_ORANGE);
+FValue.AssignValueColor(if Diff > 0 then Color.DARK_GREEN else Color.RED);
