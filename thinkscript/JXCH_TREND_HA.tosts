@@ -1,0 +1,58 @@
+#
+# 趋势指标
+#
+
+declare lower;
+
+# MTM
+input offset = 5;
+input length_ema = 13;
+input length_mtm = 3;
+
+def EMA = ExpAverage(ohlc4, length_ema);
+plot MTM = ExpAverage(ohlc4 - EMA[offset], length_mtm) / 2;
+plot zero = 0;
+
+zero.SetDefaultColor(Color.GRAY);
+MTM.SetDefaultColor(Color.GRAY);
+AddCloud(MTM, 0, Color.GREEN, Color.PINK);
+
+# MACDD
+input fastLength = 12;
+input slowLength = 26;
+input MACDLength = 9;
+input averageType = AverageType.EXPONENTIAL;
+input showBreakoutSignals = no;
+
+def haClose = (open+high+low+close)/4;
+def haopen = CompoundValue(1,(haopen[1]+haclose[1])/2, (open[1]+haClose[1])/2);
+def haHigh = Max(high, Max(haOpen, haClose));
+def haLow = Min(low, Min(haOpen, haClose));
+
+plot ZeroLine = 0;
+ZeroLine.SetDefaultColor(Color.GRAY);
+
+# MACD
+plot Value = MovingAverage(averageType, haClose, fastLength) - MovingAverage(averageType, haClose, slowLength);
+def Avg = MovingAverage(averageType, Value, MACDLength);
+def Diff = Value - Avg;
+
+# FMACD
+def fastMA1 = MovingAverage(averageType, haClose, fastLength);
+def fastMA2 = MovingAverage(averageType, fastMA1, fastLength);
+def fastMA = fastMA1 * 2 - fastMA2;
+
+def slowMA1 = MovingAverage(averageType, haClose, slowLength);
+def slowMA2 = MovingAverage(averageType, slowMA1, slowLength);
+def slowMA = slowMA1 * 2 - slowMA2;
+
+plot FValue = fastMA - slowMA;
+
+def avg1 = MovingAverage(averageType, FValue, MACDLength);
+def avg2 = MovingAverage(averageType, avg1, MACDLength);
+
+def FAvg = avg1 * 2 - avg2;
+def FDiff = FValue - FAvg;
+
+FValue.AssignValueColor(if Diff > 0 then Color.DARK_GREEN else Color.RED);
+Value.AssignValueColor(if Diff > 0 then Color.BLACK else Color.DARK_ORANGE);
