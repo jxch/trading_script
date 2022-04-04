@@ -1,0 +1,17 @@
+#
+# 动量指标
+#
+
+declare lower;
+
+input offset = 5;
+input length_ema = 13;
+input length_mtm = 3;
+
+def EMA = ExpAverage(ohlc4, length_ema);
+plot MTM = ExpAverage(ohlc4 - EMA[offset], length_mtm) * log(volume);
+plot zero = 0;
+
+zero.SetDefaultColor(Color.GRAY);
+MTM.AssignValueColor(if MTM > 0 then Color.DARK_GREEN else Color.RED);
+AddCloud(MTM, 0, Color.GREEN, Color.PINK);
