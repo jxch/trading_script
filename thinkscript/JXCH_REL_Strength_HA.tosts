@@ -1,0 +1,29 @@
+#
+# 根据平均K线计算相对强队指标
+#
+
+declare lower;
+
+input relSymbol = "QQQ";
+input averageType = averageType.EXPONENTIAL;
+input length = 21;
+input long_length = 144;
+input rel_length = 5;
+
+def ds = (ohlc4 - MovingAverage(averageType, ohlc4, length)) / ohlc4;
+def dr = (ohlc4(relSymbol) - MovingAverage(averageType, ohlc4(relSymbol), length)) / ohlc4(relSymbol);
+
+def ds_long = (ohlc4 - MovingAverage(averageType, ohlc4, long_length)) / ohlc4;
+def dr_long = (ohlc4(relSymbol) - MovingAverage(averageType, ohlc4(relSymbol), long_length)) / ohlc4(relSymbol);
+
+plot LongDiff = MovingAverage(averageType, ds_long - dr_long, rel_length);
+plot base = MovingAverage(averageType, dr, rel_length);
+plot this = MovingAverage(averageType, ds, rel_length);
+plot zero = 0;
+
+zero.SetDefaultColor(Color.GRAY);
+this.SetDefaultColor(Color.DARK_ORANGE);
+base.SetDefaultColor(Color.BlACK);
+LongDiff.setDefaultColor(Color.GRAY);
+AddCloud(LongDiff, zero, Color.GREEN, Color.PINK);
+
