@@ -1,0 +1,11 @@
+#
+# 乐观情绪指数
+#
+
+declare lower;
+input REL = "VIX";
+input length = 55;
+input AverageType = AverageType.SIMPLE;
+input Emotion_length = 5;
+
+plot OPTE = ExpAverage(MovingAverage(AverageType, close, length) / close(REL), Emotion_length);
